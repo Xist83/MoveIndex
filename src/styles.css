@@ -449,22 +449,33 @@ tbody tr:last-child td {
 }
 
 .label-id {
-  font-size: 15pt;
+  font-size: 13pt;
   font-weight: 800;
   line-height: 1.05;
 }
 
-.label-dest {
-  font-size: 10pt;
+.label-room {
+  font-size: 11pt;
+  font-weight: 700;
   line-height: 1.1;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .label-fragile {
-  font-size: 8.5pt;
+  font-size: 8pt;
   font-weight: 700;
   color: #c0392b;
+}
+
+.label-content {
+  font-size: 7pt;
+  line-height: 1.2;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 
 @media (max-width: 640px) {

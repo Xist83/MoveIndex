@@ -187,10 +187,19 @@ export function PrintLabels({ boxes }: { boxes: Box[] }) {
                   <div className="label-text">
                     <div className="label-id">{box.title}</div>
                     {box.tillPlats && (
-                      <div className="label-dest">→ {box.tillPlats}</div>
+                      <div className="label-room">{box.tillPlats}</div>
                     )}
                     {box.omtaligt && (
                       <div className="label-fragile">⚠ ÖMTÅLIGT</div>
+                    )}
+                    {box.innehall.trim() && (
+                      <div className="label-content">
+                        {box.innehall
+                          .split("\n")
+                          .map((r) => r.trim())
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </div>
                     )}
                   </div>
                 </div>
