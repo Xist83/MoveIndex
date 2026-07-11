@@ -1,0 +1,41 @@
+/* Etikettutskrift: allt utom arken döljs, mm-måtten blir exakta. */
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  .no-print,
+  header {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+
+  main {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sheets {
+    overflow: visible;
+  }
+
+  .sheet {
+    box-shadow: none;
+    margin: 0;
+    page-break-after: always;
+  }
+
+  .label {
+    outline: none;
+  }
+
+  .error {
+    display: none;
+  }
+}
