@@ -80,7 +80,16 @@ function App() {
       setListMissing(false);
       await refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      if ((e as { status?: number }).status === 403) {
+        setError(
+          "Åtkomst nekad: att skapa listor kräver behörigheten Sites.Manage.All, " +
+            "som din organisation inte tillåtit för appen. Skapa i stället listan " +
+            `manuellt på SharePoint-siten (namn: ${config.listName} – kolumner enligt README) ` +
+            "och ladda om sidan.",
+        );
+      } else {
+        setError(e instanceof Error ? e.message : String(e));
+      }
     } finally {
       setCreatingList(false);
     }

@@ -40,15 +40,17 @@ export function logout(): void {
   void msal.logoutRedirect();
 }
 
-export async function getToken(): Promise<string> {
+export async function getToken(extraScopes: string[] = []): Promise<string> {
   const account = msal.getActiveAccount();
   if (!account) throw new Error("Inte inloggad");
+  const scopes = [...SCOPES, ...extraScopes];
   try {
-    const result = await msal.acquireTokenSilent({ scopes: SCOPES, account });
+    const result = await msal.acquireTokenSilent({ scopes, account });
     return result.accessToken;
   } catch (e) {
     if (e instanceof InteractionRequiredAuthError) {
-      await msal.acquireTokenRedirect({ scopes: SCOPES, account });
+      // T.ex. medgivande saknas för en extra behörighet – be om det interaktivt.
+      await msal.acquireTokenRedirect({ scopes, account });
     }
     throw e;
   }

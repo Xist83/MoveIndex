@@ -15,8 +15,12 @@ interface GraphError extends Error {
   status?: number;
 }
 
-async function graph<T = unknown>(path: string, init?: RequestInit): Promise<T> {
-  const token = await getToken();
+async function graph<T = unknown>(
+  path: string,
+  init?: RequestInit,
+  extraScopes: string[] = [],
+): Promise<T> {
+  const token = await getToken(extraScopes);
   const url = path.startsWith("https://") ? path : GRAPH + path;
   const res = await fetch(url, {
     ...init,
@@ -66,30 +70,40 @@ async function getListId(): Promise<string> {
   return listIdCache;
 }
 
-/** Skapar SharePoint-listan med rätt kolumner (engångsuppsättning). */
+/**
+ * Skapar SharePoint-listan med rätt kolumner (engångsuppsättning).
+ * Att skapa listor kräver Sites.Manage.All (utöver Sites.ReadWrite.All som
+ * räcker för allt dagligt bruk) – behörigheten begärs först när knappen
+ * används, med ett engångsmedgivande.
+ */
 export async function ensureList(): Promise<void> {
   const siteId = await getSiteId();
-  const created = await graph<{ id: string }>(`/sites/${siteId}/lists`, {
-    method: "POST",
-    body: JSON.stringify({
-      displayName: config.listName,
-      list: { template: "genericList" },
-      columns: [
-        { name: "Innehall", text: { allowMultipleLines: true } },
-        { name: "FranRum", text: {} },
-        { name: "TillPlats", text: {} },
-        {
-          name: "Status",
-          choice: {
-            allowTextEntry: false,
-            choices: [...STATUSES],
-            displayAs: "dropDownMenu",
+  const manageScope = ["https://graph.microsoft.com/Sites.Manage.All"];
+  const created = await graph<{ id: string }>(
+    `/sites/${siteId}/lists`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        displayName: config.listName,
+        list: { template: "genericList" },
+        columns: [
+          { name: "Innehall", text: { allowMultipleLines: true } },
+          { name: "FranRum", text: {} },
+          { name: "TillPlats", text: {} },
+          {
+            name: "Status",
+            choice: {
+              allowTextEntry: false,
+              choices: [...STATUSES],
+              displayAs: "dropDownMenu",
+            },
           },
-        },
-        { name: "Omtaligt", boolean: {} },
-      ],
-    }),
-  });
+          { name: "Omtaligt", boolean: {} },
+        ],
+      }),
+    },
+    manageScope,
+  );
   listIdCache = created.id;
 }
 

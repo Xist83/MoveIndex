@@ -50,9 +50,14 @@ listName:     "Flyttlador",
 
 ### 3. SharePoint-listan
 
-Listan behöver inte skapas i förväg: första gången appen körs mot en site
-där listan saknas erbjuder den en knapp **”Skapa listan med rätt kolumner”**
-som skapar den via Graph med kolumnerna:
+Om listan saknas på siten erbjuder appen en knapp **”Skapa listan med rätt
+kolumner”**. Observera: att skapa själva listan kräver Graph-behörigheten
+`Sites.Manage.All` (utöver `Sites.ReadWrite.All`, som räcker för allt
+dagligt bruk). Knappen begär den behörigheten med ett engångsmedgivande –
+tillåter er organisation inte det, skapa i stället listan manuellt på
+siten (**+ Nytt → Lista → Tom lista**, namn `Flyttlador`) med kolumnerna
+nedan. Kolumnnamnen måste stavas exakt så här när kolumnen skapas
+(visningsnamnet kan ändras efteråt):
 
 | Kolumn | Typ |
 |---|---|
