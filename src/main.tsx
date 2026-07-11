@@ -121,15 +121,15 @@ function App() {
     );
   }
 
+  let content;
   if (listMissing) {
-    return (
+    content = (
       <div className="center-card">
         <h1>📦 MoveIndex</h1>
         <p>
           Listan <strong>{config.listName}</strong> finns inte på{" "}
           <strong>{config.siteHostname}{config.sitePath}</strong>.
         </p>
-        {error && <div className="error">{error}</div>}
         <button
           className="btn btn-primary"
           onClick={() => void createList()}
@@ -139,10 +139,7 @@ function App() {
         </button>
       </div>
     );
-  }
-
-  let content;
-  if (boxes === null) {
+  } else if (boxes === null) {
     content = <p className="muted">Hämtar lådor…</p>;
   } else if (route.view === "new") {
     content = <BoxEdit boxes={boxes} box={null} onSaved={refresh} />;
